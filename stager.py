@@ -7,19 +7,19 @@
 # Todo: check for python2 and python3.
 
 # Define global variables
-__author__ = 'Matthew Marchese'
-__copyright__ = '2015' # Enter a span of years
-__credits__ = 'People who have helped.'
+__author__ = 'matthew marchese'
+__copyright__ = '2015'  # Enter a span of years
+__credits__ = 'people who have helped.'
 
-__license__ = 'Coming soon...'
-__version__ = '2.0.01'
+__license__ = 'coming soon...'
+__version__ = '0.0.01'
 __status__= 'pre-alpha'
 
-__maintainer__ = 'Matthew Marchese'
+__maintainer__ = 'matthew marchese'
 __email__ = 'maffblaster@gentoo.org'
 
 __url__ = 'https://wiki.gentoo.org/wiki/Project:Installer'
-__sources__ = 'Where the source is located'
+__source__ = 'https://github.com/gentoo/stager'
 
 # 0 verbosity: normal output to stdout
 # 1 verbosity: be chatty (extra output) (--verbose)
@@ -34,13 +34,19 @@ import modules
 # todo Usage: stager --[global-options] command [--command-options] <command-arguments>
 
 parser = argparse.ArgumentParser(prog='stager', add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description='stager: the perfect Gentoo installer.',
-                                 epilog='Version ' + __version__ + ' ' + __status__ + '\n\nCopyright (C) ' + __copyright__ + ', ' + __author__ + '\n' + __url__)
+                                 epilog='\ncommands can be abbreviated if not ambiguous \'stager i --help\'\n\nversion ' + __version__ + ' ' + __status__ + '\n'
+                                 'copyright (c) ' + __copyright__ + ', ' + __author__ + '\n' + __url__ + '\n' + str(__source__),
+                                 usage='stager --[global-options] command [--command-options] <command-arguments>', allow_abbrev=True)
+# They are global options, not arguments
+for grp in parser._action_groups:
+    if grp.title == 'optional arguments':
+        grp.title = 'global-options'
 
 parser.add_argument('-V', '--version', action='version', help='print version information and exit.', version=__version__)
 parser.add_argument('-v', '--verbose', action='store_true', default=False, help='be chatty: more data to stdout.')
 parser.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
 
-subparser = parser.add_subparsers(title='select a command to execute', description='', metavar='install | backup | recover | serve', help=None)
+subparser = parser.add_subparsers(title='commands', description='type \'stager command --help\' for a full list of commmand-options.', metavar='', help='')
 
 # Create a parser for the install command
 parser_install = subparser.add_parser('install', aliases=['i', 'ins'], help='install a new system from a profile.')
@@ -72,4 +78,4 @@ args = parser.parse_args()
 
 parser.parse_args('-h'.split())
 
-#todo option/argument validation
+#todo option/argument santity tests
