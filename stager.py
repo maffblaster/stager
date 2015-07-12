@@ -36,7 +36,7 @@ import modules
 parser = argparse.ArgumentParser(prog='stager', add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description='stager: the perfect Gentoo installer.',
                                  epilog='\ncommands can be abbreviated if not ambiguous \'stager i --help\'\n\nversion ' + __version__ + ' ' + __status__ + '\n'
                                  'copyright (c) ' + __copyright__ + ', ' + __author__ + '\n' + __url__ + '\n' + str(__source__),
-                                 usage='stager --[global-options] command [--command-options] <command-arguments>', allow_abbrev=True)
+                                 usage='stager --[global-options] command [--command-options] <command-arguments>')
 # They are global options, not arguments
 for grp in parser._action_groups:
     if grp.title == 'optional arguments':
