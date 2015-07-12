@@ -31,12 +31,11 @@ import argparse
 # Imports all stage7 modules in the modules directory
 import modules
 
-# todo Usage: stager --[global-options] command [--command-options] <command-arguments>
+# todo Usage: stager --[global-options] subcommand [--subcommand-options <subcommand-arguments>]
 
 parser = argparse.ArgumentParser(prog='stager', add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description='stager: the perfect Gentoo installer.',
-                                 epilog='\ncommands can be abbreviated if not ambiguous \'stager i --help\'\n\nversion ' + __version__ + ' ' + __status__ + '\n'
-                                 'copyright (c) ' + __copyright__ + ', ' + __author__ + '\n' + __url__ + '\n' + str(__source__),
-                                 usage='stager --[global-options] command [--command-options] <command-arguments>')
+                                 epilog='\nsubcommands can be abbreviated if not ambiguous:\n\'stager install -h\' can be reduced to \'stager i -h\'\n\nversion ' + __version__ + ' ' + __status__ + '\n'
+                                 'copyright (c) ' + __copyright__ + ', ' + __author__ + '\n' + __url__ + '\n' + __source__)
 # They are global options, not arguments
 for grp in parser._action_groups:
     if grp.title == 'optional arguments':
@@ -46,31 +45,31 @@ parser.add_argument('-V', '--version', action='version', help='print version inf
 parser.add_argument('-v', '--verbose', action='store_true', default=False, help='be chatty: more data to stdout.')
 parser.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
 
-subparser = parser.add_subparsers(title='commands', description='type \'stager command --help\' for a full list of commmand-options.', metavar='', help='')
+subparser = parser.add_subparsers(title='subcommands', description='', help='type \'stager subcommand --help\' for a list of subcommmand-specific options.')
 
 # Create a parser for the install command
-parser_install = subparser.add_parser('install', aliases=['i', 'ins'], help='install a new system from a profile.')
-parser_install.add_argument('-l', '--logfile', dest='<logfile.log>', action='store', default='/tmp/install.log', help='path to the log file (defaults to /tmp/install.log)')
-parser_install.add_argument('-p', '--profile', dest='<profile.ini>', action='store', help='path the profile.ini file.')
+parser_install = subparser.add_parser('install', help='install a new system from a profile.')
+parser_install.add_argument('-l', '--logfile', dest='<logfile>', action='store', default='/tmp/install.log', help='path to the log file (defaults to /tmp/install.log)')
+parser_install.add_argument('-p', '--profile', dest='<profile>', action='store', help='path the profile.ini file.')
 
 # Create a parser for the backup command
-parser_backup = subparser.add_parser('backup', aliases=['b', 'bac'], help='create a complete backup of the system.')
+parser_backup = subparser.add_parser('backup', help='create a complete backup of the system.')
 parser_backup.add_argument('-c', '--compression', dest='COMP_TYPE', choices=['gz', 'bz2', 'xz', 'lzma'], help='select a compression type.')
 parser_backup.add_argument('-d', '--destination', dest='', action='store', help='path to the backup destination.')
 parser_backup.add_argument('-e', '--exclude', dest='', action='append', help='exclude the following files/directories.')
 parser_backup.add_argument('-ef', '--exclude-file', dest='<exclude.txt>', action='store', help='path to a text file containing a list of files/directories to exclude.')
 
 # Create a parser for the recovery command
-parser_recover = subparser.add_parser('recover', aliases=['r', 'rec'], help='recover a system from a stage4 tarball.')
+parser_recover = subparser.add_parser('recover', help='recover a system from a stage4 tarball.')
 parser_recover.add_argument('-d', '--destination', dest='', action='store', help='path to the recovery destination.')
 parser_recover.add_argument('-p', '--profile', dest='<profile.ini>', action='store', help='path the profile.ini file.')
 parser_recover.add_argument('-s', '--source', dest='', action='store', help='source of the tarball.')
 
 # Create a parser for the serve command
-parser_serve = subparser.add_parser('serve', aliases=['s', 'ser'], help='start the http ui.')
-parser_serve.add_argument('-l', '--logfile', dest='<logfile.log>', action='store', default='/tmp/install.log', help='path to the log file (defaults to /tmp/install.log)')
+parser_serve = subparser.add_parser('serve', help='start the http ui.')
+parser_serve.add_argument('-l', '--logfile', dest='<logfile>', action='store', default='/tmp/install.log', help='path to the log file (defaults to /tmp/install.log)')
 parser_serve.add_argument('-P', '--password', action='store', help='sets a password for the http interface.')
-parser_serve.add_argument('-p', '--profile', dest='<profile.ini>', action='store', help='populates the http UI with profile.ini data.')
+parser_serve.add_argument('-p', '--profile', dest='<profile>', action='store', help='populates the http UI with profile.ini data.')
 parser_serve.add_argument('--port', action='store', default='80', help='sets the port for the http interface (defaults to 80).')
 parser_serve.add_argument('--url', action='store', default='http://localhost/stager', help='sets the url for the http interface (defaults to http://localhost/stager).')
 
