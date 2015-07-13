@@ -54,10 +54,11 @@ parser_install.add_argument('-p', '--profile', dest='<profile>', action='store',
 
 # Create a parser for the backup command
 parser_backup = subparser.add_parser('backup', help='create a complete backup of the system.')
-parser_backup.add_argument('-c', '--compression', dest='COMP_TYPE', choices=['gz', 'bz2', 'xz', 'lzma'], help='select a compression type.')
+parser_backup.add_argument('-c', '--compression-type', dest='COMP_TYPE', choices=['gz', 'bz2', 'xz', 'lzma'], help='select a compression type.')
 parser_backup.add_argument('-d', '--destination', dest='', action='store', help='path to the backup destination.')
 parser_backup.add_argument('-e', '--exclude', dest='', action='append', help='exclude the following files/directories.')
-parser_backup.add_argument('-ef', '--exclude-file', dest='<exclude.txt>', action='store', help='path to a text file containing a list of files/directories to exclude.')
+parser_backup.add_argument('--exclude-list', dest='<exclude.txt>', action='store', help='path to a new line separated text file containing a list of files/directories to exclude.')
+parser_backup.add_argument('-n', '--no-compress', dest='extensions', help='do not compress files with the these extensions.')
 
 # Create a parser for the recovery command
 parser_recover = subparser.add_parser('recover', help='recover a system from a stage4 tarball.')

@@ -1,7 +1,7 @@
 
 #### Preliminary plans for the installer function have been laid out in seven stages: ####
 
-1. Gather and process hardware information.
+1. Gather and process hardware information. This step should prep the system based on hardware, if possible.
 2. Partition drives according to a default (or pre-set condition).
 3. Extract compressed filesystem tarball (stage4).
 4. Chroot into the newly extracted system.
