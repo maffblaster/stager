@@ -1,4 +1,14 @@
 
+### Goals ###
+
+0.0.04 - 
+
+0.0.03 - Add support for ini-style profiles.
+
+0.0.02 - Validate and parse command-line arguments in prototype. - In process...
+
+0.0.01 - <s>Prototype a (rough) command-line interface for stager.</s> - Complete!
+
 #### Preliminary plans for the installer function have been laid out in seven stages: ####
 
 1. Gather and process hardware information. This step should prep the system based on hardware, if possible.
@@ -8,9 +18,8 @@
 5. Compile packages/kernel of choice.
 6. Setup user accounts, timezone, etc.
 7. Install the boot loader and EFI boot entry.
-8. Reboot!
 
-#### Preliminary plans for the recovery function: ####
+#### Preliminary plans for the recover function: ####
 
 1. The recovery function should work flawlessly with any stage4 backup of the root filesystem (created by Catalyst, or third party programs.)
 2. Users should be able to rely on this system in case of emergency for "full metal backups".
