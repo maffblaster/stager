@@ -21,3 +21,5 @@ This file is maintained for a high-level overview of changes. Look at the commit
  * Added type checking (mostly <code>str</code>) for arguments/options.
  * Subcommands can (now) be properly shortened (<tt>i</tt>, <tt>b</tt>, <tt>r</tt>, <tt>s</tt>)
  * <code>metavar</code> enables a pretty display of arguments.
+ * <code>action=count</code> added to <code>--verbose</code> option for future expansion (multiple levels of verbosity).
+ * 

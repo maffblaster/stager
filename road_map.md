@@ -5,7 +5,7 @@
 
 0.0.03 - Add support for ini-style profiles.
 
-0.0.02 - Validate and parse command-line arguments in prototype. - In process...
+0.0.02 - Validate and parse command-line arguments. - In process...
 
 0.0.01 - <s>Prototype a (rough) command-line interface for stager.</s> - Complete!
 

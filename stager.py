@@ -41,25 +41,28 @@ for grp in parser._action_groups:
     if grp.title == 'optional arguments':
         grp.title = 'global-options'
 
+output = parser.add_mutually_exclusive_group()
+
 parser.add_argument('-V', '--version', action='version', help='print version information and exit.', version=__version__)
-parser.add_argument('-v', '--verbose', action='store_true', default=False, help='be chatty: more data to stdout.')
-parser.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
+output.add_argument('-v', '--verbose', dest='verbose', action='count', help='be chatty: more data to stdout.')
+output.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
 
 subparser = parser.add_subparsers(title='subcommands', description='invoke a subcommand for stager to execute.', metavar='subcommand', help='use \'stager subcommand --help\' for detailed options.')
 
 # Create a parser for the install command
 parser_install = subparser.add_parser('install', aliases={'i'}, help='install a new system from a profile.')
 parser_install.add_argument('-l', '--logfile', dest='logfile', metavar='<logfile.log>', action='store', type=str, default='/tmp/install.log', help='path to the log file (defaults to /tmp/install.log).')
-parser_install.add_argument('-p', '--profile', dest='profile', metavar='<profile.ini>', action='store', type=str, help='path the profile.ini file.')
+parser_install.add_argument('-p', '--profile', required=True, dest='profile', metavar='<profile.ini>', action='store', type=str, help='path the profile.ini file.')
 
 # Create a parser for the backup command
 parser_backup = subparser.add_parser('backup', aliases={'b'}, help='create a complete backup of the system.')
 parser_backup.add_argument('-c', '--compression-type', dest='compression-type', metavar='<type>', choices=['gz', 'bz2', 'xz', 'lzma'], type=str, help='select a compression type.')
 parser_backup.add_argument('-d', '--destination', dest='destination', metavar='<destination>', action='store', type=str, help='path to the backup destination.')
-parser_backup.add_argument('-e', '--exclude', dest='exclude', metavar='<file>', action='append', type=str, help='exclude the following files/directories.')
+parser_backup.add_argument('-e', '--exclude', nargs='+', dest='exclude', metavar='<files/dirs>', type=str, help='exclude the following files/directories.')
 parser_backup.add_argument('--exclude-list', dest='exclude-list', metavar='<exclude.txt>', action='store', type=str, help='path to a new line separated text file containing a list of files/directories to exclude.')
 parser_backup.add_argument('-l', '--logfile', dest='logfile', metavar='<logfile.log>', action='store', type=str, default='/tmp/backup.log', help='path to the log file (defaults to /tmp/backup.log).')
-parser_backup.add_argument('-n', '--no-compress', dest='no-compress', metavar='<type>', type=str, help='do not compress files with the these extensions.')
+parser_backup.add_argument('-n', '--no-compress', dest='no-compress', metavar='<ctype>', type=str, help='do not compress files with the these extensions.')
+parser_backup.add_argument('-p', '--profile', dest='profile', metavar='<profile.ini>', action='store', type=str, help='path the profile.ini file.')
 
 # Create a parser for the recovery command
 parser_recover = subparser.add_parser('recover', aliases={'r'}, help='recover a system from a stage4 tarball.')
@@ -76,8 +79,8 @@ parser_serve.add_argument('-p', '--profile', dest='profile', metavar='<profile.i
 parser_serve.add_argument('--port', dest='port', metavar='<port>', action='store', default=80, type=int, help='sets the port for the http interface (defaults to 80).')
 parser_serve.add_argument('--url', dest='url', metavar='<url>', action='store', default='http://localhost/stager', type=str, help='sets the url for the http interface (defaults to http://localhost/stager).')
 
-args = parser.parse_args()
+args = parser.parse_args('--help'.split())
 
-parser.parse_args(' '.split())
+print(args)
 
 #todo option/argument santity tests
