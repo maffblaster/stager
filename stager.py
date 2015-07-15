@@ -1,12 +1,18 @@
 #! /usr/bin/env python3
 
-# Stage7 - The perfect Gentoo installer
+# stager - the perfect Gentoo installer
 # Copyright (C) 2015, Matthew Marchese
 # License coming...
 
-# Todo: check for python2 and python3.
+import sys
+import argparse
+
+# Import custom modules from the modules directory
+from modules import input_validator
+from modules import ini_validator
 
 # Define global variables
+__name__ = 'stager'
 __author__ = 'matthew marchese'
 __copyright__ = '2015'  # Enter a span of years
 __credits__ = 'people who have helped.'
@@ -21,15 +27,10 @@ __email__ = 'maffblaster@gentoo.org'
 __url__ = 'https://wiki.gentoo.org/wiki/Project:Installer'
 __source__ = 'https://github.com/gentoo/stager'
 
-# 0 verbosity: normal output to stdout
-# 1 verbosity: be chatty (extra output) (--verbose)
-# -1 verbosity: no normal output to stdout (--quiet)
-verbosity = 0
-
-import argparse
-
-# Imports all stage7 modules in the modules directory
-# import modules
+# Python 3 validator
+if sys.version_info <= (3, 0):
+    print(__name__ + " requires Python 3.0 and up. Exiting...\n")
+    sys.exit(1)
 
 # todo Usage: stager --[global-options] subcommand [--subcommand-options <subcommand-arguments>]
 
@@ -41,11 +42,11 @@ for grp in parser._action_groups:
     if grp.title == 'optional arguments':
         grp.title = 'global-options'
 
-output = parser.add_mutually_exclusive_group()
-
 parser.add_argument('-V', '--version', action='version', help='print version information and exit.', version=__version__)
-output.add_argument('-v', '--verbose', dest='verbose', action='count', help='be chatty: more data to stdout.')
-output.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
+
+verbosity_group = parser.add_mutually_exclusive_group()
+verbosity_group.add_argument('-v', '--verbose', dest='verbose', action='count', default=0, help='be chatty: more data to stdout.')
+verbosity_group.add_argument('-q', '--quiet', action='store_true', default=False, help='be silent: no data to stdout.')
 
 subparser = parser.add_subparsers(title='subcommands', description='invoke a subcommand for stager to execute.', metavar='subcommand', help='use \'stager subcommand --help\' for detailed options.')
 
@@ -72,15 +73,15 @@ parser_recover.add_argument('-p', '--profile', dest='profile', metavar='<profile
 parser_recover.add_argument('-s', '--source', dest='source', metavar='<dir>', action='store', type=str, help='source of the tarball.')
 
 # Create a parser for the serve command
-parser_serve = subparser.add_parser('serve', aliases={'s'}, help='start the http ui.')
+parser_serve = subparser.add_parser('serve', aliases={'s'}, help='serve the http ui to the network.')
 parser_serve.add_argument('-l', '--logfile', dest='logfile', metavar='<logfile.log>', action='store', default='/tmp/http-ui.log', type=str, help='path to the log file (defaults to /tmp/http-ui.log)')
 parser_serve.add_argument('-P', '--password', dest='password', metavar='<password>', action='store', type=str, help='sets a password for the http interface.')
 parser_serve.add_argument('-p', '--profile', dest='profile', metavar='<profile.ini>', action='store', type=str, help='populates the http UI with profile.ini data.')
 parser_serve.add_argument('--port', dest='port', metavar='<port>', action='store', default=80, type=int, help='sets the port for the http interface (defaults to 80).')
 parser_serve.add_argument('--url', dest='url', metavar='<url>', action='store', default='http://localhost/stager', type=str, help='sets the url for the http interface (defaults to http://localhost/stager).')
 
-args = parser.parse_args('--help'.split())
+args = parser.parse_args(' --help'.split())
 
 print(args)
 
-#todo option/argument santity tests
+#todo option/argument validation testing
