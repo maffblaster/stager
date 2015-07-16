@@ -12,10 +12,10 @@ from modules import input_validator
 from modules import ini_validator
 
 # Define global variables
-__name__ = 'stager'
-__author__ = 'matthew marchese'
-__copyright__ = '2015'  # Enter a span of years
-__credits__ = 'people who have helped.'
+__name__ = 'stager' # Script name
+__author__ = 'matthew marchese' # Add authors
+__copyright__ = '2015'  # Enter a span of years.
+__credits__ = '' # People who have helped go here.
 
 __license__ = 'coming soon...'
 __version__ = '0.0.01'

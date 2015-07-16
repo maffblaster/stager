@@ -1,4 +1,4 @@
-FAQ
+FAQs
 -----
 
 **Q:** What will happen if there are command-line options passed *and* a profile at the same time? For example <tt>stager backup --profile /tmp/backup.ini --exclude /sys /proc /dev --destination /tmp/backup</tt>

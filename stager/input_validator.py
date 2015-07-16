@@ -1,7 +1,9 @@
 # Copyright (C) 2015  Matthew Marchese
-# This modules will parse and validate code from various UIs.
+# This module will parse and validate code from various UIs.
 
 # License coming...
+
+__name__ = 'input_validator'
 
 import fileinput
 
