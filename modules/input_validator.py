@@ -3,6 +3,8 @@
 
 # License coming...
 
+import fileinput
+
 # 0 verbosity: normal output to stdout
 # 1 verbosity: be chatty (extra output) (--verbose)
 # -1 verbosity: no normal output to stdout (--quiet)
