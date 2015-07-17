@@ -7,9 +7,9 @@
 import sys
 import argparse
 
-# Import custom modules from the modules directory
-from modules import input_validator
-from modules import ini_validator
+# Import custom modules
+import input_validator
+import ini_validator
 
 # Define global variables
 __name__ = 'stager' # Script name
