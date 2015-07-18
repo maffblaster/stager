@@ -8,5 +8,7 @@ __name__ = 'ini_validator'
 
 import configparser
 
-# Create configparser objects
-profile = configparser.ConfigParser()
+class INIParser():
+
+    # Create configparser objects
+    profile = configparser.ConfigParser()

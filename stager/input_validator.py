@@ -14,12 +14,14 @@ verbosity = 0
 
 # Verbosity is -1 when --quiet is called.
 
-def set_verbosity(v):
-    if v.quiet == True:
-        verbosity = -1
-    else:
-       verbosity = v.verbosity
+class CLIParser():
+
+    def set_verbosity(v):
+        if v.quiet == True:
+            verbosity = -1
+        else:
+           verbosity = v.verbosity
 
 
-def get_verbosity(v):
-    return verbosity
+    def get_verbosity(v):
+        return verbosity

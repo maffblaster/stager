@@ -8,8 +8,8 @@ import sys
 import argparse
 
 # Import custom modules
-import input_validator
-import ini_validator
+from stager.input_validator import CLIParser
+from stager.ini_validator import *
 
 # Define global variables
 __name__ = 'stager' # Script name
