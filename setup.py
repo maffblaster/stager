@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 
+from stager.version import get_version
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
-config = {
-    'description': 'the perfect Gentoo installer',
-    'author': 'Matthew Marchese',
-    'url': 'https://github.com/gentoo/stager',
-    'download_url': 'https://github.com/gentoo/stager',
-    'author_email': 'maffblaster@gentoo.org',
-    'version': '0.0.01',
-    'install_requires': [''],
-    'packages': ['stager'],
-    'scripts': [],
-    'name': 'stager'
-}
+get_version()
+
+setup(
+    name = 'stager',
+    version = '0.0.1',
+    description = 'the perfect Gentoo installer',
+    url = 'https://github.com/gentoo/stager',
+    author = 'Matthew Marchese',
+    author_email = 'maffblaster@gentoo.org',
+    license = 'To be determined...',
+    keywords = 'gentoo installer development',
+    packages = [''],
+    install_requires = [''],
+)
 
 setup(**config)

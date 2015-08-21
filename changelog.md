@@ -3,11 +3,12 @@ Changelog
 
 This file is maintained for a high-level overview of changes. Look at the commit history for all the details.
 
-#### 0.0.02 (pre-alpha) ####
+#### 0.0.2 (pre-alpha) ####
 
+* Changing version style from (x.x.xx to x.x.x) for PyPI compatibility.
 * 
 
-#### 0.0.01 (pre-alpha) ####
+#### 0.0.1 (pre-alpha) ####
 
 * Design updates:
  * Imported  stage7 Python 3 project.

@@ -4,28 +4,16 @@
 # Copyright (C) 2015, Matthew Marchese
 # License coming...
 
+import version
+
 import sys
 import argparse
 
 # Import custom modules
-from stager.input_validator import CLIParser
-from stager.ini_validator import *
+import input_validator
+import ini_validator
 
-# Define global variables
-__name__ = 'stager' # Script name
-__author__ = 'matthew marchese' # Add authors
-__copyright__ = '2015'  # Enter a span of years.
-__credits__ = '' # People who have helped go here.
-
-__license__ = 'coming soon...'
-__version__ = '0.0.01'
-__status__= 'pre-alpha'
-
-__maintainer__ = 'matthew marchese'
-__email__ = 'maffblaster@gentoo.org'
-
-__url__ = 'https://wiki.gentoo.org/wiki/Project:Installer'
-__source__ = 'https://github.com/gentoo/stager'
+stager_version = version.get_version()
 
 # Python 3 validator
 if sys.version_info <= (3, 0):
@@ -35,14 +23,14 @@ if sys.version_info <= (3, 0):
 # todo Usage: stager --[global-options] subcommand [--subcommand-options <subcommand-arguments>]
 
 parser = argparse.ArgumentParser(prog='stager', add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description='stager: the perfect Gentoo installer.',
-                                 epilog='\nsubcommands can be shorted:\n\'stager backup -h\' can be reduced to \'stager b -h\'\n\nversion ' + __version__ + ' ' + __status__ + '\n'
-                                 'copyright (c) ' + __copyright__ + ', ' + __author__ + '\n' + __url__ + '\n' + __source__)
+                                 epilog='\nsubcommands can be shorted:\n\'stager backup -h\' can be reduced to \'stager b -h\'\n\nversion ' + stager_version['__version__'] + ' ' + stager_version['__status__'] + '\n'
+                                 'copyright (c) ' + stager_version['__copyright__'] + ', ' + stager_version['__author__'] + '\n' + stager_version['__url__'] + '\n' + stager_version['__source__'])
 # They are global options, not arguments
 for grp in parser._action_groups:
     if grp.title == 'optional arguments':
         grp.title = 'global-options'
 
-parser.add_argument('-V', '--version', action='version', help='print version information and exit.', version=__version__)
+parser.add_argument('-V', '--version', action='version', help='print version information and exit.', version=stager_version['__version__'])
 
 verbosity_group = parser.add_mutually_exclusive_group()
 verbosity_group.add_argument('-v', '--verbose', dest='verbose', action='count', default=0, help='be chatty: more data to stdout.')
