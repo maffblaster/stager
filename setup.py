@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
-from stager.version import get_version
-
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-
-get_version()
 
 setup(
     name = 'stager',
@@ -18,8 +14,7 @@ setup(
     author_email = 'maffblaster@gentoo.org',
     license = 'To be determined...',
     keywords = 'gentoo installer development',
-    packages = [''],
+    packages = ['stager'],
     install_requires = [''],
+    py_modules=['stager'],
 )
-
-setup(**config)

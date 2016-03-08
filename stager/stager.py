@@ -4,13 +4,11 @@
 # Copyright (C) 2015, Matthew Marchese
 # License coming...
 
-import version
-
 import sys
 import argparse
 
 # Import custom modules
-import input_validator
+import version
 import ini_validator
 
 stager_version = version.get_version()
@@ -68,8 +66,6 @@ parser_serve.add_argument('-p', '--profile', dest='profile', metavar='<profile.i
 parser_serve.add_argument('--port', dest='port', metavar='<port>', action='store', default=80, type=int, help='sets the port for the http interface (defaults to 80).')
 parser_serve.add_argument('--url', dest='url', metavar='<url>', action='store', default='http://localhost/stager', type=str, help='sets the url for the http interface (defaults to http://localhost/stager).')
 
-args = parser.parse_args(' --help'.split())
+args = parser.parse_args('  '.split())
 
 print(args)
-
-#todo option/argument validation testing
