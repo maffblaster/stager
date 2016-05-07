@@ -1,5 +1,6 @@
 stager - the perfect Gentoo installer
 -----
+[![Build Status](https://travis-ci.org/gentoo/stager.svg)](https://travis-ci.org/gentoo/stager)
 
 Please visit [the official project page](https://wiki.gentoo.org/wiki/Project:Installer) for more details.
 
