@@ -1,4 +1,4 @@
-# For testing, of course!
+
 import unittest
 
 ClITestCase(unittest.TestCase):
@@ -11,9 +11,9 @@ ClITestCase(unittest.TestCase):
 
     def test_Version():
         print("Test ran!")
-      
+
     def test_Verbose():
         print("Verbose...")
-      
+
     def test_Quiet():
         print("Quiet")

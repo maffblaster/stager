@@ -1,20 +1,20 @@
-tests
+Tests
 -----
 
 This document contains information about tests in Python.
 
-stager should check (at a `/proc` level) for various systems. 
+stager should check (at a `/proc` level) for various systems.
 
-### filesystem  ###
+### filesystem
 
 * `/proc/filesystems`
 
-### hardware  ###
+### hardware
 
 * `/proc/cpuinfo`
 * `/proc/partitions`
 
-### system ###
+### system
 
 * `/proc/uptime`
 * `/proc/version`

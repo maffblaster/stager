@@ -1,0 +1,119 @@
+{
+   "stager": {
+  "description": "This configuration is for an AMD64 system running systemd. It has two hard drives defined. The first disk has a GPT label. Its first partition will be formatted with fat32. The second partition will be formatted btrfs. The second disk also has a gpt label. It has one partition formatted with ext4 and will be mounted at /data1. Two users are added to the system at the end.",
+  "interface": "*",
+  "host": "localhost",
+  "port": "61513",
+  "auth": {
+	  "type": "random",
+	  "length": "4"
+	  },
+  "autosave_config": "true",
+  "sync_time": "true"
+	},
+  "dev": {
+    "sda": {
+      "1": {
+        "type": "fat32",
+        "mountpoint": "/boot",
+        "opts": "defaults,noauto",
+        "dump": "0",
+        "pass": "0"
+      },
+      "2": {
+        "type": "btrfs",
+        "mountpoint": "/",
+        "opts": "rw,ssd,discard,inode_cache,compress=lzo",
+        "dump": "0",
+        "pass": "1"
+      },
+      "label": "gpt"
+    },
+    "sdb": {
+      "1": {
+        "type": "ext4",
+        "mountpoint": "/data1",
+        "opts": "defaults",
+        "dump": "0",
+        "pass": "0"
+      },
+      "label": "gpt"
+    },
+    "cdrom": {
+      "type": "auto",
+      "mountpoint": "/mnt/cdrom",
+      "opts": "noauto,ro",
+      "dump": "0",
+      "pass": "0"
+    }
+  },
+  "target": {
+	"stage": "http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64.txt",
+	"repo_snapshot": {
+		"uri": "http://distfiles.gentoo.org/snapshots/portage-latest.tar.xz",
+		"md5sum_uri": "http://distfiles.gentoo.org/snapshots/portage-latest.tar.xz.md5sum",
+		"gpgsig_uri": "http://distfiles.gentoo.org/snapshots/portage-latest.tar.xz.gpgsig"
+		},
+    "profile": "default/linux/amd64/13.0/systemd",
+    "hostname": "example",
+    "timezone": "America/Los_Angeles",
+    "locales": {
+		"1": "en_US ISO-8859-1",
+		"2": "en_US.UTF-8 UTF-8"
+	},
+    "kernel": {
+		"package": "sys-kernel/gentoo-sources",
+		"config": "https://gist.githubusercontent.com/maffblaster/2450afb5e97616af4af8e28a2fdd44ab/raw/cb2415443aedb44ff2c76372ebd3336b0ca0a64a/kernel-config-x86_64-4.9.6-gentoo"
+		},
+    "bootloader": {
+		"grub2": {
+			"platform": "efi-64",
+			"target": "X86_64-efi",
+			"efi-directory": "/boot"
+		}
+	},
+    "portage": {
+      "sync": "true",
+      "make.conf": {
+	  "cflags": "-march=generic -O2 -pipe",
+	  "cxxflags": "${CFLAGS}",
+	  "chost": "x86_64-pc-linux-gnu",
+	  "makeopts": "-j2",
+      "gentoo_mirrors": "http://mirrors.kernel.org/gentoo/",
+      "features": "parallel-fetch parallel-install",
+      "accept_license": "@FREE",
+      "accept_keywords": "amd64",
+      "use": "",
+      "input_devices": "libinput",
+      "video_cards": "vesa"
+		},
+		"repos.conf": {
+			"main-repo": "gentoo",
+			"gentoo": {
+				"location": "/usr/portage",
+				"sync-type": "rsync",
+				"sync-uri": "rsync://rsync.gentoo.org/gentoo-portage",
+				"auto-sync": "yes"
+				}
+			}
+	   },
+    "users": {
+		"maff": {
+		"real_name": "Matthew Marchese",
+		"email": "maffblaster@gentoo.org",
+		"default_password": "password",
+		"reset_password_on_login": "true",
+		"create_home": "true",
+		"groups": "audio cdrom floppy games portage usb video wheel"
+		},
+		"brad": {
+		"real_name": "Brad Magyar",
+		"email": "test@test.com",
+		"default_password": "password",
+		"reset_password_on_login": "true",
+		"create_home": "true",
+		"groups": "audio cdrom floppy games portage usb video wheel"
+		}
+     }
+}
+}

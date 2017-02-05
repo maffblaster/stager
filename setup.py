@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
 
+import os
+from stager.stager import __author__,__email__,__description__,__source__,__version__
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 setup(
-    name = 'stager',
-    version = '0.0.1',
-    description = 'the perfect Gentoo installer',
-    url = 'https://github.com/gentoo/stager',
-    author = 'Matthew Marchese',
-    author_email = 'maffblaster@gentoo.org',
-    license = 'To be determined...',
-    keywords = 'gentoo installer development',
-    packages = ['stager'],
-    install_requires = [''],
+    author=__author__,
+    author_email=__email__,
+    name='stager',
+    version=__version__,
+    description=__description__,
+    url=__source__,
+    license='MIT',
+    keywords='gentoo installer',
+    packages=['stager'],
+    install_requires=['flask, docopt'],
+    long_description=read('readme.md'),
     py_modules=['stager'],
 )

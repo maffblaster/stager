@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created by diasvg.py -->
+<svg width="19.318cm" height="19.350cm" viewBox="24.232 -6.987 43.550 12.362"
+ xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect x="33.750" y="-0.150" width="9.600" height="3.412" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<rect x="33.750" y="-0.150" width="9.600" height="3.412" fill="none" stroke="#54487A" stroke-width="0.200" />
+<text x="38.550" y="2.045"  fill="#54487A" text-anchor="middle" font-size="1.76" font-family="sans" font-style="normal" font-weight="400">
+stager server</text>
+<rect x="34.650" y="8.950" width="8.150" height="3.312" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<rect x="34.650" y="8.950" width="8.150" height="3.312" fill="none" stroke="#73D216" stroke-width="0.200" />
+<rect x="35.050" y="-6.887" width="6.600" height="5.550" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<rect x="35.050" y="-6.887" width="6.600" height="5.550" fill="none" stroke="#000000" stroke-width="0.200" />
+<line x1="38.451" y1="-1.238" x2="38.465" y2="-0.850" stroke="#000000" stroke-width="0.200" />
+<polygon fill="#000000" stroke="none" stroke-width="0.200" points="38.215,-0.841 38.483,-0.350 38.715,-0.859 "/>
+<polygon fill="none" stroke="#000000" stroke-width="0.200"  points="38.215,-0.841 38.483,-0.350 38.715,-0.859 "/>
+<line x1="38.597" y1="3.361" x2="38.615" y2="4.012" stroke="#000000" stroke-width="0.200" />
+<polygon fill="#000000" stroke="none" stroke-width="0.200" points="38.365,4.019 38.628,4.512 38.864,4.006 "/>
+<polygon fill="none" stroke="#000000" stroke-width="0.200"  points="38.365,4.019 38.628,4.512 38.864,4.006 "/>
+<text x="38.725" y="11.095"  fill="#000000" text-anchor="middle" font-size="1.76" font-family="sans" font-style="normal" font-weight="400">
+http client</text>
+<text x="38.350" y="-5.406"  fill="#000000" text-anchor="middle" font-size="1.06" font-family="sans" font-style="normal" font-weight="400">
+Linux kernel</text>
+<text x="38.350" y="-4.348"  fill="#000000" text-anchor="middle" font-size="1.06" font-family="sans" font-style="normal" font-weight="400">
+/proc</text>
+<text x="38.350" y="-3.290"  fill="#000000" text-anchor="middle" font-size="1.06" font-family="sans" font-style="normal" font-weight="400">
+/dev</text>
+<text x="38.350" y="-2.231"  fill="#000000" text-anchor="middle" font-size="1.06" font-family="sans" font-style="normal" font-weight="400">
+/sys</text>
+<rect x="33.900" y="4.713" width="9.550" height="3.200" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<rect x="33.900" y="4.713" width="9.550" height="3.200" fill="none" stroke="#FF0000" stroke-width="0.200" />
+<text x="38.675" y="6.704"  fill="#FF0000" text-anchor="middle" font-size="1.41" font-family="sans" font-style="normal" font-weight="400">
+Authentication</text>
+<line x1="38.675" y1="7.913" x2="38.681" y2="8.250" stroke="#000000" stroke-width="0.200" />
+<polygon fill="#000000" stroke="none" stroke-width="0.200" points="38.431,8.255 38.691,8.750 38.931,8.245 "/>
+<polygon fill="none" stroke="#000000" stroke-width="0.200"  points="38.431,8.255 38.691,8.750 38.931,8.245 "/>
+</svg>
