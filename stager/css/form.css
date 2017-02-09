@@ -1,0 +1,14 @@
+.formlabel {
+    font-size: 10px;
+    color: gray;
+}
+.schema-form-fieldset {
+    border: solid 1px;
+    border-color: lightgray;
+    border-radius: 6px;
+    padding: 16px 16px 0 16px;
+    margin-bottom: 8px;
+}
+legend {
+    color: #54487a;
+}
