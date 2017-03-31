@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from stager.stager import __author__,__email__,__description__,__source__,__version__
+from stager.stager import __author__, __email__, __description__, __source__, __version__
 
 try:
     from setuptools import setup

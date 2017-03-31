@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html ng-app="myModule">
+<head>
+    <meta charset="utf-8">
+    <title>Gentoo Stager</title>
+    <script src="{{ url_for('static', filename='bower_components/angular/angular.js') }}" charset="utf-8"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='bower_components/tv4/tv4.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='bower_components/angular-schema-form/dist/schema-form.min.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='bower_components/angular-schema-form/dist/bootstrap-decorator.min.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='bower_components/objectpath/lib/ObjectPath.js') }}"></script>
+    <script src="{{ url_for('static', filename='bower_components/angular-sanitize/angular-sanitize.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gentooForm.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gentooSchema.js') }}"></script>
+    <script type="text/javascript">
+        var gentooModel = {{ gentooModel|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/gentooInstallForm.js') }}"></script>
+    <link href="{{ url_for('static', filename='bootstrap.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ url_for('static', filename='tyrian.css') }}" rel="stylesheet" media="screen">
+
+</head>
+<body>
+    <header>
+      <div class="site-title">
+        <div class="container">
+          <div class="row">
+            <div class="site-title-buttons">
+              <div class="btn-group b tn-group-sm">
+                <a href="https://get.gentoo.org/" role="button" class="btn get-gentoo"><span class="fa fa-fw fa-download"></span> <strong>Get Gentoo!</strong></a>
+                <div class="btn-group btn-group-sm">
+                  <a class="btn gentoo-org-sites dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+                    <span class="fa fa-fw fa-map-o"></span> <span class="hidden-xs">gentoo.org sites</span> <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="https://www.gentoo.org/" title="Main Gentoo website"><span class="fa fa-home fa-fw"></span> gentoo.org</a></li>
+                    <li><a href="https://wiki.gentoo.org/" title="Find and contribute documentation"><span class="fa fa-file-text-o fa-fw"></span> Wiki</a></li>
+                    <li><a href="https://bugs.gentoo.org/" title="Report issues and find common issues"><span class="fa fa-bug fa-fw"></span> Bugs</a></li>
+                    <li><a href="https://forums.gentoo.org/" title="Discuss with the community"><span class="fa fa-comments-o fa-fw"></span> Forums</a></li>
+                    <li><a href="https://packages.gentoo.org/" title="Find software for your Gentoo"><span class="fa fa-hdd-o fa-fw"></span> Packages</a></li>
+                    <li class="divider"></li>
+                    <li><a href="https://planet.gentoo.org/" title="Find out what's going on in the developer community"><span class="fa fa-rss fa-fw"></span> Planet</a></li>
+                    <li><a href="https://archives.gentoo.org/" title="Read up on past discussions"><span class="fa fa-archive fa-fw"></span> Archives</a></li>
+                    <li><a href="https://sources.gentoo.org/" title="Browse our source code"><span class="fa fa-code fa-fw"></span> Sources</a></li>
+                    <li class="divider"></li>
+                    <li><a href="https://infra-status.gentoo.org/" title="Get updates on the services provided by Gentoo"><span class="fa fa-server fa-fw"></span> Infra Status</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="logo">
+              <a href="/" title="Back to the homepage" class="site-logo">
+                <object data="{{ url_for('static', filename='site-logo.svg') }}" type="image/svg+xml">
+                  <img src="{{ url_for('static', filename='site-logo.png') }}" alt="Gentoo Linux Logo">
+                </object>
+              </a>
+              <span class="site-label">Stager - Installation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="tyrian-navbar" role="navigation">
+        <div class="container">
+          <div class="row">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-main-collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Brad</a></li>
+                <li><a href="#">Maff</a></li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="container" ng-controller="FormController">
+        <h1>Stager</h1>
+        <div class='formlabel'>This configuration is for an AMD64 system running systemd. It has two hard drives defined. The first disk has a GPT label. Its first partition will be formatted with fat32. The second partition will be formatted btrfs. The second disk also has a gpt label. It has one partition formatted with ext4 and will be mounted at /data1. Two users are added to the system at the end.</div><br>
+        <form name="gentooForm" sf-schema="schema" sf-form="form" sf-model="model" ng-submit="onSubmit(gentooForm)"></form>
+    </div>
+
+    <pre class="ng-binding"></pre>
+
+</body>
+
+</html>
