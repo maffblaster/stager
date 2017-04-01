@@ -3,7 +3,7 @@
 # See the 'license' file in the base of the package for license information.
 
 # stager - the perfect Gentoo installer
-# Copyright 2016-2017, Matthew Marchese
+# Copyright 2016-2017 Matthew Marchese, Brad Magyar
 # MIT
 
 #!/usr/bin/env python3
