@@ -15,6 +15,7 @@ var nextLetter = function () {
     }
 };
 
+/*
 var gentooForm = [
  {
     "type":"section",
@@ -41,15 +42,16 @@ var gentooForm = [
   "type": "submit",
   "title": "Save",
 }]
+*/
 
 
 
 
-/* var gentooForm = ["*",
+ var gentooForm = ["*",
 {
   "type": "submit",
   "title": "Save",
-}] */
+}] 
 
 
 /*

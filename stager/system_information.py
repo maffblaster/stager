@@ -43,6 +43,7 @@ def repoSelect(opt):
     # Chooses base uri and text file based on architecture
     switcher = {
         "AMD64": { "path": "http://distfiles.gentoo.org/releases/amd64/autobuilds", "textfile": "latest-stage3-amd64.txt" }, 
+        "x86_64": { "path": "http://distfiles.gentoo.org/releases/amd64/autobuilds", "textfile": "latest-stage3-amd64.txt" }, 
         "x86": { "path": "http://distfiles.gentoo.org/releases/x86/autobuilds", "textfile": "latest-stage3-i686.txt" }
     }
     return switcher.get(opt, "")

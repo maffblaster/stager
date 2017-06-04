@@ -1,0 +1,26 @@
+{
+  "name": "stager",
+  "homepage": "https://github.com/maffblaster/stager",
+  "authors": [
+    "Matthew Marchese <maffblaster@gentoo.org>",
+    "Brad Magyar <braddmagyar@gmail.com>"
+  ],
+  "description": "The Perfect Gentoo Installer",
+  "main": "stager.py",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.6.4",
+    "angular-sanitize": "~1.6.4",
+    "angular-schema-form": "~0.8.13",
+    "objectpath": "1.1.0",
+    "tv4": "1.0.17"
+  }
+}
