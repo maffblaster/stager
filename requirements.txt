@@ -1,2 +1,8 @@
 docopt
+docutils
 flask
+psutil
+kernelconfig
+numpy
+pyparted
+peewee

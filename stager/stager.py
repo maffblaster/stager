@@ -39,6 +39,7 @@ from docopt import docopt
 
 import sys
 import system_information as sysinf
+import itertools
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 
@@ -53,12 +54,28 @@ contentsUrl = sysinf.getFileUrl(archrepo, repofile, 'contents')
 digestsUrl = sysinf.getFileUrl(archrepo, repofile, 'digests')
 digestsAscUrl = sysinf.getFileUrl(archrepo, repofile, 'digests.asc')
 
+# Disk info
+partList = sysinf.getDisks()
+partDict = dict(itertools.zip_longest(*[iter(partList)] * 2, fillvalue=""))
+
+partThing = sysinf.checkParts()
+
+print(partThing)
+
 # Default data to pass to form template
-gentooModel = { 
-    "interface": "*", 
-    "host": inf.hostname, 
-    "port": 61513, 
+gentooModel = {
+    "stager_options": {
+        "autosave_config": bool(0),
+        "sync_time": bool(0)
+    },
+    "sysinfo": {
+        "interface": "*",
+        "host": inf.hostname,
+        "port": 61513,
+        "disks": partList
+    },
     "target": {
+        "host_arch": inf.machine,
         "stage": "stage3",
         "locales": {"locale": inf.locale},
         "repo_snapshot": {
@@ -81,12 +98,12 @@ app = Flask(__name__, static_url_path='/static')
 #   Root
 @app.route('/')
 def welcome():
-    print ("hello world: meet stager: the perfect Gentoo installer")
+    return "Meet stager: the perfect Gentoo installer"
 
 #   Gentoo Form
 @app.route('/form')
 def formtest():
-    return render_template('formtemplate.html', sysinf=inf, gentooModel=gentooModel)
+    return render_template('formtemplate_vue.html', sysinf=inf, gentooModel=gentooModel)
 
 #    Auth
 @app.route('/auth', methods=['GET', 'POST'])

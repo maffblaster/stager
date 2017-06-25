@@ -2,6 +2,8 @@
 import platform
 import locale
 import urllib
+import psutil
+import parted
 
 class sysinf():
     
@@ -28,9 +30,9 @@ class sysinf():
         self.release = platform.release()  
         self.uname = platform.uname()  
         self.system_alias = platform.system_alias(self.system, self.release, self.version)
-        self.platform= platform.platform()
-        self.architecture= platform.architecture()
-        self.dist = platform.dist()
+        self.platform = platform.platform()
+        self.architecture = platform.architecture()
+        #self.dist = platform.dist()
         
         # C lib
         self.libc_ver = platform.libc_ver()
@@ -69,3 +71,14 @@ def getFileUrl(uri, file, filetype):
     elif (uri == '') or (file == '') or (filetype == ''):
         fileurl = ' '
     return fileurl
+
+def getDisks():
+    try:
+        partlist = psutil.disk_partitions(False)
+        return partlist
+    except:
+        pass
+
+def checkParts():
+    bah = parted.getDevice("/dev/sdb")
+    return bah

@@ -1,0 +1,1472 @@
+<html ng-app="myModule" class="ng-scope">
+<head>
+    <style type="text/css">
+        @charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}
+    </style>
+    <meta charset="utf-8">
+    <title>Gentoo Stager</title>
+    <script src="/static/bower_components/angular/angular.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="/static/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script type="text/javascript">
+        var gentooModel = {"host": "brad-desktop", "interface": "*", "port": 61513, "target": {"locales": {"locale": ["en_US", "UTF-8"]}, "repo_snapshot": {"gpgsig_uri": "http://distfiles.gentoo.org/releases/amd64/autobuilds/20170615/stage3-amd64-20170615.tar.bz2.DIGESTS", "md5sum_uri": "http://distfiles.gentoo.org/releases/amd64/autobuilds/20170615/stage3-amd64-20170615.tar.bz2.CONTENTS", "uri": "http://distfiles.gentoo.org/releases/amd64/autobuilds/20170615/stage3-amd64-20170615.tar.bz2"}, "stage": "stage3"}};
+
+    </script>
+    <link href="/static/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="/static/tyrian.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+<header>
+    <div class="site-title">
+        <div class="container">
+            <div class="row">
+                <div class="site-title-buttons">
+                    <div class="btn-group b tn-group-sm">
+                        <a href="https://get.gentoo.org/" role="button" class="btn get-gentoo"><span
+                                class="fa fa-fw fa-download"></span> <strong>Get Gentoo!</strong></a>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn gentoo-org-sites dropdown-toggle" data-toggle="dropdown" data-target="#"
+                               href="#">
+                                <span class="fa fa-fw fa-map-o"></span> <span class="hidden-xs">gentoo.org sites</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="https://www.gentoo.org/" title="Main Gentoo website"><span
+                                        class="fa fa-home fa-fw"></span> gentoo.org</a></li>
+                                <li><a href="https://wiki.gentoo.org/" title="Find and contribute documentation"><span
+                                        class="fa fa-file-text-o fa-fw"></span> Wiki</a></li>
+                                <li><a href="https://bugs.gentoo.org/"
+                                       title="Report issues and find common issues"><span
+                                        class="fa fa-bug fa-fw"></span> Bugs</a></li>
+                                <li><a href="https://forums.gentoo.org/" title="Discuss with the community"><span
+                                        class="fa fa-comments-o fa-fw"></span> Forums</a></li>
+                                <li><a href="https://packages.gentoo.org/" title="Find software for your Gentoo"><span
+                                        class="fa fa-hdd-o fa-fw"></span> Packages</a></li>
+                                <li class="divider"></li>
+                                <li><a href="https://planet.gentoo.org/"
+                                       title="Find out what's going on in the developer community"><span
+                                        class="fa fa-rss fa-fw"></span> Planet</a></li>
+                                <li><a href="https://archives.gentoo.org/" title="Read up on past discussions"><span
+                                        class="fa fa-archive fa-fw"></span> Archives</a></li>
+                                <li><a href="https://sources.gentoo.org/" title="Browse our source code"><span
+                                        class="fa fa-code fa-fw"></span> Sources</a></li>
+                                <li class="divider"></li>
+                                <li><a href="https://infra-status.gentoo.org/"
+                                       title="Get updates on the services provided by Gentoo"><span
+                                        class="fa fa-server fa-fw"></span> Infra Status</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo">
+                    <a href="/" title="Back to the homepage" class="site-logo">
+                        <object data="/static/site-logo.svg" type="image/svg+xml">
+                            <img src="/static/site-logo.png" alt="Gentoo Linux Logo">
+                        </object>
+                    </a>
+                    <span class="site-label">Stager - Installation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="tyrian-navbar" role="navigation">
+        <div class="container">
+            <div class="row">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target=".navbar-main-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse navbar-main-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Brad</a></li>
+                        <li><a href="#">Maff</a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container ng-scope" ng-controller="FormController">
+    <h1>Stager</h1>
+    <div class="formlabel">This configuration is for an AMD64 system running systemd. It has two hard drives defined.
+        The first disk has a GPT label. Its first partition will be formatted with fat32. The second partition will be
+        formatted btrfs. The second disk also has a gpt label. It has one partition formatted with ext4 and will be
+        mounted at /data1. Two users are added to the system at the end.
+    </div>
+    <br>
+    <form name="gentooForm" sf-schema="schema" sf-form="form" sf-model="model" ng-submit="onSubmit(gentooForm)"
+          class="ng-pristine ng-valid ng-isolate-scope ng-valid-schema-form ng-valid-step">
+        <bootstrap-decorator form="schemaForm.form[0]" class="ng-scope">
+            <div class="form-group schema-form-text  has-feedback has-success"
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="interface">Interface</label>
+                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                    step="any" sf-changed="form" placeholder="" class="form-control  ng-not-empty ng-valid-schema-form"
+                    id="interface" ng-model-options="form.ngModelOptions" ng-model="model['interface']"
+                    ng-disabled="form.readonly" schema-validate="form" name="interface"
+                    aria-describedby="interfaceStatus"><!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                    ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()" id="interfaceStatus"
+                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                <!-- end ngIf: hasError() || hasSuccess() -->
+                <div class="help-block" sf-message="form.description">
+                    <div class="formlabel">Network interface</div>
+                </div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[1]" class="ng-scope">
+            <div class="form-group schema-form-text  has-feedback has-success"
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="host">Host</label>
+                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                    step="any" sf-changed="form" placeholder="" class="form-control  ng-not-empty ng-valid-schema-form"
+                    id="host" ng-model-options="form.ngModelOptions" ng-model="model['host']"
+                    ng-disabled="form.readonly" schema-validate="form" name="host" aria-describedby="hostStatus">
+                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                    ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()" id="hostStatus"
+                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                <!-- end ngIf: hasError() || hasSuccess() -->
+                <div class="help-block" sf-message="form.description">
+                    <div class="formlabel">Host that installation server should run on</div>
+                </div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[2]" class="ng-scope">
+            <div class="form-group schema-form-number  has-feedback has-success"
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="port">Port</label>
+                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="number"
+                    step="any" sf-changed="form" placeholder=""
+                    class="form-control  ng-not-empty ng-valid-step ng-valid-schema-form" id="port"
+                    ng-model-options="form.ngModelOptions" ng-model="model['port']" ng-disabled="form.readonly"
+                    schema-validate="form" name="port" aria-describedby="portStatus">
+                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                    ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()" id="portStatus"
+                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                <!-- end ngIf: hasError() || hasSuccess() -->
+                <div class="help-block" sf-message="form.description">
+                    <div class="formlabel">Port for installation server</div>
+                </div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[3]" class="ng-scope">
+            <div class="form-group schema-form-text  has-feedback"
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="auth">Auth</label>
+                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                    step="any" sf-changed="form" placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                    id="auth" ng-model-options="form.ngModelOptions" ng-model="model['auth']"
+                    ng-disabled="form.readonly" schema-validate="form" name="auth" aria-describedby="authStatus">
+                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                    ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon"
+                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                <!-- ngIf: hasError() || hasSuccess() -->
+                <div class="help-block" sf-message="form.description"></div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[4]" class="ng-scope">
+            <div class="checkbox schema-form-checkbox "
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                <label class=""><input type="checkbox" sf-changed="form" ng-disabled="form.readonly"
+                                       ng-model="model['autosave_config']" ng-model-options="form.ngModelOptions"
+                                       schema-validate="form" class="ng-empty ng-valid-schema-form"
+                                       name="autosave_config"> <span ng-bind-html="form.title" class="ng-binding">Autosave Config</span></label>
+                <div class="help-block" sf-message="form.description">
+                    <div class="formlabel">Autosave Configuration</div>
+                </div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[5]" class="ng-scope">
+            <div class="checkbox schema-form-checkbox "
+                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                <label class=""><input type="checkbox" sf-changed="form" ng-disabled="form.readonly"
+                                       ng-model="model['sync_time']" ng-model-options="form.ngModelOptions"
+                                       schema-validate="form" class="ng-empty ng-valid-schema-form" name="sync_time">
+                    <span ng-bind-html="form.title" class="ng-binding">Sync Time</span></label>
+                <div class="help-block" sf-message="form.description">
+                    <div class="formlabel"></div>
+                </div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[6]" class="ng-scope">
+            <div sf-array="form" class="schema-form-array  ng-not-empty" ng-model="model['dev']"
+                 ng-model-options="form.ngModelOptions"><label class="control-label ng-binding" ng-show="showTitle()">Dev</label>
+                <ol class="list-group ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="modelArray"
+                    ui-sortable=""><!-- ngRepeat: item in modelArray track by $index -->
+                    <li class="list-group-item " ng-repeat="item in modelArray track by $index">
+                        <button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)"
+                                style="position: relative; z-index: 20;" type="button" class="close pull-right"><span
+                                aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                        <sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)" class="ng-scope">
+                            <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Dev</legend>
+                                <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                                     ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div sf-array="form" class="schema-form-array  ng-not-empty"
+                                         ng-model="model['dev']['0']['disk']" ng-model-options="form.ngModelOptions">
+                                        <label class="control-label ng-binding" ng-show="showTitle()">Disks</label>
+                                        <ol class="list-group ng-pristine ng-untouched ng-valid ng-not-empty"
+                                            ng-model="modelArray" ui-sortable="">
+                                            <!-- ngRepeat: item in modelArray track by $index -->
+                                            <li class="list-group-item " ng-repeat="item in modelArray track by $index">
+                                                <button ng-hide="form.readonly || form.remove === null"
+                                                        ng-click="deleteFromArray($index)"
+                                                        style="position: relative; z-index: 20;" type="button"
+                                                        class="close pull-right"><span aria-hidden="true">×</span><span
+                                                        class="sr-only">Close</span></button>
+                                                <sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)"
+                                                              class="ng-scope">
+                                                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                                        <legend ng-class="{'sr-only': !showTitle() }"
+                                                                class="ng-binding">Disk
+                                                        </legend>
+                                                        <div class="help-block ng-binding ng-hide"
+                                                             ng-show="form.description"
+                                                             ng-bind-html="form.description"></div>
+                                                        <!-- ngRepeat: item in form.items -->
+                                                        <sf-decorator ng-repeat="item in form.items" form="item"
+                                                                      class="ng-scope">
+                                                            <div sf-array="form" class="schema-form-array  ng-not-empty"
+                                                                 ng-model="model['dev']['0']['disk']['0']['partition']"
+                                                                 ng-model-options="form.ngModelOptions"><label
+                                                                    class="control-label ng-binding"
+                                                                    ng-show="showTitle()">Partitions</label>
+                                                                <ol class="list-group ng-pristine ng-untouched ng-valid ng-not-empty"
+                                                                    ng-model="modelArray" ui-sortable="">
+                                                                    <!-- ngRepeat: item in modelArray track by $index -->
+                                                                    <li class="list-group-item "
+                                                                        ng-repeat="item in modelArray track by $index">
+                                                                        <button ng-hide="form.readonly || form.remove === null"
+                                                                                ng-click="deleteFromArray($index)"
+                                                                                style="position: relative; z-index: 20;"
+                                                                                type="button" class="close pull-right">
+                                                                            <span aria-hidden="true">×</span><span
+                                                                                class="sr-only">Close</span></button>
+                                                                        <sf-decorator ng-init="arrayIndex = $index"
+                                                                                      form="copyWithIndex($index)"
+                                                                                      class="ng-scope">
+                                                                            <fieldset ng-disabled="form.readonly"
+                                                                                      class="schema-form-fieldset ">
+                                                                                <legend ng-class="{'sr-only': !showTitle() }"
+                                                                                        class="ng-binding">Partition
+                                                                                </legend>
+                                                                                <div class="help-block ng-binding ng-hide"
+                                                                                     ng-show="form.description"
+                                                                                     ng-bind-html="form.description"></div>
+                                                                                <!-- ngRepeat: item in form.items -->
+                                                                                <sf-decorator
+                                                                                        ng-repeat="item in form.items"
+                                                                                        form="item" class="ng-scope">
+                                                                                    <div class="form-group schema-form-text  has-feedback"
+                                                                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                                                        <label class="control-label "
+                                                                                               ng-class="{'sr-only': !showTitle()}"
+                                                                                               for="parttype">Partition
+                                                                                            Type</label>
+                                                                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                                                            ng-show="form.key"
+                                                                                            type="text" step="any"
+                                                                                            sf-changed="form"
+                                                                                            placeholder=""
+                                                                                            class="form-control  ng-empty ng-valid-schema-form"
+                                                                                            id="parttype"
+                                                                                            ng-model-options="form.ngModelOptions"
+                                                                                            ng-model="model['dev']['0']['disk']['0']['partition']['0']['parttype']"
+                                                                                            ng-disabled="form.readonly"
+                                                                                            schema-validate="form"
+                                                                                            name="parttype"
+                                                                                            aria-describedby="parttypeStatus">
+                                                                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.feedback !== false --><span
+                                                                                            ng-if="form.feedback !== false"
+                                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <!-- end ngIf: form.feedback !== false -->
+                                                                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                                                                        <div class="help-block"
+                                                                                             sf-message="form.description"></div>
+                                                                                    </div>
+                                                                                </sf-decorator>
+                                                                                <!-- end ngRepeat: item in form.items -->
+                                                                                <sf-decorator
+                                                                                        ng-repeat="item in form.items"
+                                                                                        form="item" class="ng-scope">
+                                                                                    <div class="form-group schema-form-text  has-feedback"
+                                                                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                                                        <label class="control-label "
+                                                                                               ng-class="{'sr-only': !showTitle()}"
+                                                                                               for="mountpoint">Mount
+                                                                                            Point</label>
+                                                                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                                                            ng-show="form.key"
+                                                                                            type="text" step="any"
+                                                                                            sf-changed="form"
+                                                                                            placeholder=""
+                                                                                            class="form-control  ng-empty ng-valid-schema-form"
+                                                                                            id="mountpoint"
+                                                                                            ng-model-options="form.ngModelOptions"
+                                                                                            ng-model="model['dev']['0']['disk']['0']['partition']['0']['mountpoint']"
+                                                                                            ng-disabled="form.readonly"
+                                                                                            schema-validate="form"
+                                                                                            name="mountpoint"
+                                                                                            aria-describedby="mountpointStatus">
+                                                                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.feedback !== false --><span
+                                                                                            ng-if="form.feedback !== false"
+                                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <!-- end ngIf: form.feedback !== false -->
+                                                                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                                                                        <div class="help-block"
+                                                                                             sf-message="form.description"></div>
+                                                                                    </div>
+                                                                                </sf-decorator>
+                                                                                <!-- end ngRepeat: item in form.items -->
+                                                                                <sf-decorator
+                                                                                        ng-repeat="item in form.items"
+                                                                                        form="item" class="ng-scope">
+                                                                                    <div class="form-group schema-form-text  has-feedback"
+                                                                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                                                        <label class="control-label "
+                                                                                               ng-class="{'sr-only': !showTitle()}"
+                                                                                               for="opts">Options</label>
+                                                                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                                                            ng-show="form.key"
+                                                                                            type="text" step="any"
+                                                                                            sf-changed="form"
+                                                                                            placeholder=""
+                                                                                            class="form-control  ng-empty ng-valid-schema-form"
+                                                                                            id="opts"
+                                                                                            ng-model-options="form.ngModelOptions"
+                                                                                            ng-model="model['dev']['0']['disk']['0']['partition']['0']['opts']"
+                                                                                            ng-disabled="form.readonly"
+                                                                                            schema-validate="form"
+                                                                                            name="opts"
+                                                                                            aria-describedby="optsStatus">
+                                                                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                                                        <!-- ngIf: form.feedback !== false --><span
+                                                                                            ng-if="form.feedback !== false"
+                                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <!-- end ngIf: form.feedback !== false -->
+                                                                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                                                                        <div class="help-block"
+                                                                                             sf-message="form.description"></div>
+                                                                                    </div>
+                                                                                </sf-decorator>
+                                                                                <!-- end ngRepeat: item in form.items -->
+                                                                                <sf-decorator
+                                                                                        ng-repeat="item in form.items"
+                                                                                        form="item" class="ng-scope">
+                                                                                    <div class="checkbox schema-form-checkbox "
+                                                                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                                                                        <label class=""><input
+                                                                                                type="checkbox"
+                                                                                                sf-changed="form"
+                                                                                                ng-disabled="form.readonly"
+                                                                                                ng-model="model['dev']['0']['disk']['0']['partition']['0']['dump']"
+                                                                                                ng-model-options="form.ngModelOptions"
+                                                                                                schema-validate="form"
+                                                                                                class="ng-empty ng-valid-schema-form"
+                                                                                                name="dump"> <span
+                                                                                                ng-bind-html="form.title"
+                                                                                                class="ng-binding">Dump</span></label>
+                                                                                        <div class="help-block"
+                                                                                             sf-message="form.description"></div>
+                                                                                    </div>
+                                                                                </sf-decorator>
+                                                                                <!-- end ngRepeat: item in form.items -->
+                                                                                <sf-decorator
+                                                                                        ng-repeat="item in form.items"
+                                                                                        form="item" class="ng-scope">
+                                                                                    <div class="checkbox schema-form-checkbox "
+                                                                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                                                                        <label class=""><input
+                                                                                                type="checkbox"
+                                                                                                sf-changed="form"
+                                                                                                ng-disabled="form.readonly"
+                                                                                                ng-model="model['dev']['0']['disk']['0']['partition']['0']['pass']"
+                                                                                                ng-model-options="form.ngModelOptions"
+                                                                                                schema-validate="form"
+                                                                                                class="ng-empty ng-valid-schema-form"
+                                                                                                name="pass"> <span
+                                                                                                ng-bind-html="form.title"
+                                                                                                class="ng-binding">Pass</span></label>
+                                                                                        <div class="help-block"
+                                                                                             sf-message="form.description"></div>
+                                                                                    </div>
+                                                                                </sf-decorator>
+                                                                                <!-- end ngRepeat: item in form.items -->
+                                                                            </fieldset>
+                                                                        </sf-decorator>
+                                                                    </li>
+                                                                    <!-- end ngRepeat: item in modelArray track by $index -->
+                                                                </ol>
+                                                                <div class="clearfix" style="padding: 15px;">
+                                                                    <button ng-hide="form.readonly || form.add === null"
+                                                                            ng-click="appendToArray()" type="button"
+                                                                            class="btn btn-default pull-right"><i
+                                                                            class="glyphicon glyphicon-plus"></i> Add
+                                                                    </button>
+                                                                </div>
+                                                                <div class="help-block ng-binding ng-hide"
+                                                                     ng-show="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"
+                                                                     ng-bind-html="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"></div>
+                                                            </div>
+                                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                                        <sf-decorator ng-repeat="item in form.items" form="item"
+                                                                      class="ng-scope">
+                                                            <div class="form-group schema-form-text  has-feedback"
+                                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                                <label class="control-label "
+                                                                       ng-class="{'sr-only': !showTitle()}" for="label">Label</label>
+                                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                                    ng-show="form.key" type="text" step="any"
+                                                                    sf-changed="form" placeholder=""
+                                                                    class="form-control  ng-empty ng-valid-schema-form"
+                                                                    id="label" ng-model-options="form.ngModelOptions"
+                                                                    ng-model="model['dev']['0']['disk']['0']['label']"
+                                                                    ng-disabled="form.readonly" schema-validate="form"
+                                                                    name="label" aria-describedby="labelStatus">
+                                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                                <!-- ngIf: form.feedback !== false --><span
+                                                                    ng-if="form.feedback !== false"
+                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                    aria-hidden="true"></span>
+                                                                <!-- end ngIf: form.feedback !== false -->
+                                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                                <div class="help-block"
+                                                                     sf-message="form.description"></div>
+                                                            </div>
+                                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                                    </fieldset>
+                                                </sf-decorator>
+                                            </li><!-- end ngRepeat: item in modelArray track by $index --></ol>
+                                        <div class="clearfix" style="padding: 15px;">
+                                            <button ng-hide="form.readonly || form.add === null"
+                                                    ng-click="appendToArray()" type="button"
+                                                    class="btn btn-default pull-right"><i
+                                                    class="glyphicon glyphicon-plus"></i> Add
+                                            </button>
+                                        </div>
+                                        <div class="help-block ng-binding"
+                                             ng-show="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"
+                                             ng-bind-html="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description">
+                                            System Disks
+                                        </div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                        </sf-decorator>
+                    </li><!-- end ngRepeat: item in modelArray track by $index --></ol>
+                <div class="clearfix" style="padding: 15px;">
+                    <button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" type="button"
+                            class="btn btn-default pull-right"><i class="glyphicon glyphicon-plus"></i> Add
+                    </button>
+                </div>
+                <div class="help-block ng-binding ng-hide"
+                     ng-show="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"
+                     ng-bind-html="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"></div>
+            </div>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[7]" class="ng-scope">
+            <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Target</legend>
+                <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                     ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div class="form-group schema-form-text  has-feedback has-success"
+                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="stage">Stage</label>
+                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                            step="any" sf-changed="form" placeholder=""
+                            class="form-control  ng-not-empty ng-valid-schema-form" id="stage"
+                            ng-model-options="form.ngModelOptions" ng-model="model['target']['stage']"
+                            ng-disabled="form.readonly" schema-validate="form" name="stage"
+                            aria-describedby="stageStatus">
+                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                            ng-if="form.feedback !== false"
+                            class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                            aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                        <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()"
+                                                                       id="stageStatus"
+                                                                       class="sr-only ng-binding ng-scope">(success)</span>
+                        <!-- end ngIf: hasError() || hasSuccess() -->
+                        <div class="help-block" sf-message="form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Repo Snapshot</legend>
+                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback has-success"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="uri">URI</label>
+                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-not-empty ng-valid-schema-form" id="uri"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['repo_snapshot']['uri']" ng-disabled="form.readonly"
+                                    schema-validate="form" name="uri" aria-describedby="uriStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false -->
+                                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()"
+                                                                               id="uriStatus"
+                                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                                <!-- end ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback has-success"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="md5sum_uri">MD5
+                                    Sum URI</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-not-empty ng-valid-schema-form" id="md5sum_uri"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['repo_snapshot']['md5sum_uri']"
+                                    ng-disabled="form.readonly" schema-validate="form" name="md5sum_uri"
+                                    aria-describedby="md5sum_uriStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false -->
+                                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()"
+                                                                               id="md5sum_uriStatus"
+                                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                                <!-- end ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback has-success"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="gpgsig_uri">GPG
+                                    Sig URI</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-not-empty ng-valid-schema-form" id="gpgsig_uri"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['repo_snapshot']['gpgsig_uri']"
+                                    ng-disabled="form.readonly" schema-validate="form" name="gpgsig_uri"
+                                    aria-describedby="gpgsig_uriStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon glyphicon-ok"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false -->
+                                <!-- ngIf: hasError() || hasSuccess() --><span ng-if="hasError() || hasSuccess()"
+                                                                               id="gpgsig_uriStatus"
+                                                                               class="sr-only ng-binding ng-scope">(success)</span>
+                                <!-- end ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div class="form-group schema-form-text  has-feedback"
+                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="profile">Profile</label>
+                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                            step="any" sf-changed="form" placeholder=""
+                            class="form-control  ng-empty ng-valid-schema-form" id="profile"
+                            ng-model-options="form.ngModelOptions" ng-model="model['target']['profile']"
+                            ng-disabled="form.readonly" schema-validate="form" name="profile"
+                            aria-describedby="profileStatus">
+                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                            ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon"
+                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                            aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                        <!-- ngIf: hasError() || hasSuccess() -->
+                        <div class="help-block" sf-message="form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div class="form-group schema-form-text  has-feedback"
+                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                               for="hostname">Hostname</label>
+                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                            step="any" sf-changed="form" placeholder=""
+                            class="form-control  ng-empty ng-valid-schema-form" id="hostname"
+                            ng-model-options="form.ngModelOptions" ng-model="model['target']['hostname']"
+                            ng-disabled="form.readonly" schema-validate="form" name="hostname"
+                            aria-describedby="hostnameStatus">
+                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                            ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon"
+                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                            aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                        <!-- ngIf: hasError() || hasSuccess() -->
+                        <div class="help-block" sf-message="form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div class="form-group schema-form-text  has-feedback"
+                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                               for="timezone">Timezone</label>
+                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key" type="text"
+                            step="any" sf-changed="form" placeholder=""
+                            class="form-control  ng-empty ng-valid-schema-form" id="timezone"
+                            ng-model-options="form.ngModelOptions" ng-model="model['target']['timezone']"
+                            ng-disabled="form.readonly" schema-validate="form" name="timezone"
+                            aria-describedby="timezoneStatus">
+                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight --><!-- ngIf: form.feedback !== false --><span
+                            ng-if="form.feedback !== false" class="form-control-feedback ng-scope glyphicon"
+                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                            aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                        <!-- ngIf: hasError() || hasSuccess() -->
+                        <div class="help-block" sf-message="form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div sf-array="form" class="schema-form-array  ng-not-empty" ng-model="model['target']['locales']"
+                         ng-model-options="form.ngModelOptions"><label class="control-label ng-binding"
+                                                                       ng-show="showTitle()">Locales</label>
+                        <ol class="list-group ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="modelArray"
+                            ui-sortable=""><!-- ngRepeat: item in modelArray track by $index -->
+                            <li class="list-group-item " ng-repeat="item in modelArray track by $index">
+                                <button ng-hide="form.readonly || form.remove === null"
+                                        ng-click="deleteFromArray($index)" style="position: relative; z-index: 20;"
+                                        type="button" class="close pull-right"><span aria-hidden="true">×</span><span
+                                        class="sr-only">Close</span></button>
+                                <sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)"
+                                              class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="0">Locale</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="0"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['locales']['0']" ng-disabled="form.readonly"
+                                            schema-validate="form" name="0" aria-describedby="0Status">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator>
+                            </li><!-- end ngRepeat: item in modelArray track by $index --></ol>
+                        <div class="clearfix" style="padding: 15px;">
+                            <button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()"
+                                    type="button" class="btn btn-default pull-right"><i
+                                    class="glyphicon glyphicon-plus"></i> Add
+                            </button>
+                        </div>
+                        <div class="help-block ng-binding ng-hide"
+                             ng-show="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"
+                             ng-bind-html="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Kernel</legend>
+                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="package">Kernel
+                                    Package</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="package"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['kernel']['package']" ng-disabled="form.readonly"
+                                    schema-validate="form" name="package" aria-describedby="packageStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="config">Kernel
+                                    Config</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="config"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['kernel']['config']" ng-disabled="form.readonly"
+                                    schema-validate="form" name="config" aria-describedby="configStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Bootloader</legend>
+                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="bootloaderName">Bootloader
+                                    Name</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="bootloaderName"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['bootloader']['bootloaderName']"
+                                    ng-disabled="form.readonly" schema-validate="form" name="bootloaderName"
+                                    aria-describedby="bootloaderNameStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="platform">Platform</label>
+                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="platform"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['bootloader']['platform']" ng-disabled="form.readonly"
+                                    schema-validate="form" name="platform" aria-describedby="platformStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                       for="target">Target</label>
+                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="target"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['bootloader']['target']" ng-disabled="form.readonly"
+                                    schema-validate="form" name="target" aria-describedby="targetStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="form-group schema-form-text  has-feedback"
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="efi-directory">EFI
+                                    Directory</label> <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight" ng-show="form.key"
+                                    type="text" step="any" sf-changed="form" placeholder=""
+                                    class="form-control  ng-empty ng-valid-schema-form" id="efi-directory"
+                                    ng-model-options="form.ngModelOptions"
+                                    ng-model="model['target']['bootloader']['efi-directory']"
+                                    ng-disabled="form.readonly" schema-validate="form" name="efi-directory"
+                                    aria-describedby="efi-directoryStatus">
+                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                            class="form-control-feedback ng-scope glyphicon"
+                                                                            ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                            aria-hidden="true"></span>
+                                <!-- end ngIf: form.feedback !== false --> <!-- ngIf: hasError() || hasSuccess() -->
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Portage</legend>
+                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <div class="checkbox schema-form-checkbox "
+                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                <label class=""><input type="checkbox" sf-changed="form" ng-disabled="form.readonly"
+                                                       ng-model="model['target']['portage']['sync']"
+                                                       ng-model-options="form.ngModelOptions" schema-validate="form"
+                                                       class="ng-empty ng-valid-schema-form" name="sync"> <span
+                                        ng-bind-html="form.title" class="ng-binding">Portage Sync</span></label>
+                                <div class="help-block" sf-message="form.description"></div>
+                            </div>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Make.Conf</legend>
+                                <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                                     ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="cflags">CFlags</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="cflags"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['cflags']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="cflags"
+                                            aria-describedby="cflagsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="cxxflags">CXXFlags</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="cxxflags"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['cxxflags']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="cxxflags"
+                                            aria-describedby="cxxflagsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="chost">CHost</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="chost"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['chost']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="chost"
+                                            aria-describedby="chostStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="makeopts">MakeOpts</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="makeopts"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['makeopts']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="makeopts"
+                                            aria-describedby="makeoptsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="gentoo_mirrors">Gentoo Mirrors</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="gentoo_mirrors"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['gentoo_mirrors']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="gentoo_mirrors"
+                                            aria-describedby="gentoo_mirrorsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="features">Features</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="features"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['features']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="features"
+                                            aria-describedby="featuresStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="accept_license">Accept License</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="accept_license"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['accept_license']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="accept_license"
+                                            aria-describedby="accept_licenseStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="accept_keywords">Accept Keywords</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="accept_keywords"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['accept_keywords']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="accept_keywords"
+                                            aria-describedby="accept_keywordsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}" for="use">USE
+                                            Flags</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="use"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['use']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="use"
+                                            aria-describedby="useStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="input_devices">Input Devices</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="input_devices"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['input_devices']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="input_devices"
+                                            aria-describedby="input_devicesStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="video_cards">Video Cards</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="video_cards"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['makeConf']['video_cards']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="video_cards"
+                                            aria-describedby="video_cardsStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                            <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Repos.Conf</legend>
+                                <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                                     ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <div class="form-group schema-form-text  has-feedback"
+                                         ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                        <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                               for="main_repo">Main Repo</label>
+                                        <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                            ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                            ng-show="form.key" type="text" step="any" sf-changed="form" placeholder=""
+                                            class="form-control  ng-empty ng-valid-schema-form" id="main_repo"
+                                            ng-model-options="form.ngModelOptions"
+                                            ng-model="model['target']['portage']['reposConf']['main_repo']"
+                                            ng-disabled="form.readonly" schema-validate="form" name="main_repo"
+                                            aria-describedby="main_repoStatus">
+                                        <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                        <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                        <!-- ngIf: form.feedback !== false --><span ng-if="form.feedback !== false"
+                                                                                    class="form-control-feedback ng-scope glyphicon"
+                                                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                                                    aria-hidden="true"></span>
+                                        <!-- end ngIf: form.feedback !== false -->
+                                        <!-- ngIf: hasError() || hasSuccess() -->
+                                        <div class="help-block" sf-message="form.description"></div>
+                                    </div>
+                                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">Gentoo</legend>
+                                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="location">Location</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="location" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['portage']['reposConf']['gentoo']['location']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="location"
+                                                    aria-describedby="locationStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="sync_type">Sync Type</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="sync_type" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['portage']['reposConf']['gentoo']['sync_type']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="sync_type"
+                                                    aria-describedby="sync_typeStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="sync_uri">Sync URI</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="sync_uri" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['portage']['reposConf']['gentoo']['sync_uri']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="sync_uri"
+                                                    aria-describedby="sync_uriStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="checkbox schema-form-checkbox "
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                                <label class=""><input type="checkbox" sf-changed="form"
+                                                                       ng-disabled="form.readonly"
+                                                                       ng-model="model['target']['portage']['reposConf']['gentoo']['auto_sync']"
+                                                                       ng-model-options="form.ngModelOptions"
+                                                                       schema-validate="form"
+                                                                       class="ng-empty ng-valid-schema-form"
+                                                                       name="auto_sync"> <span ng-bind-html="form.title"
+                                                                                               class="ng-binding">Auto Sync</span></label>
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                                </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                </sf-decorator><!-- end ngRepeat: item in form.items -->
+                <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                    <div sf-array="form" class="schema-form-array  ng-not-empty" ng-model="model['target']['users']"
+                         ng-model-options="form.ngModelOptions"><label class="control-label ng-binding"
+                                                                       ng-show="showTitle()">Users</label>
+                        <ol class="list-group ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="modelArray"
+                            ui-sortable=""><!-- ngRepeat: item in modelArray track by $index -->
+                            <li class="list-group-item " ng-repeat="item in modelArray track by $index">
+                                <button ng-hide="form.readonly || form.remove === null"
+                                        ng-click="deleteFromArray($index)" style="position: relative; z-index: 20;"
+                                        type="button" class="close pull-right"><span aria-hidden="true">×</span><span
+                                        class="sr-only">Close</span></button>
+                                <sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)"
+                                              class="ng-scope">
+                                    <fieldset ng-disabled="form.readonly" class="schema-form-fieldset ">
+                                        <legend ng-class="{'sr-only': !showTitle() }" class="ng-binding">User</legend>
+                                        <div class="help-block ng-binding ng-hide" ng-show="form.description"
+                                             ng-bind-html="form.description"></div><!-- ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="username">Username</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="username" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['users']['0']['username']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="username"
+                                                    aria-describedby="usernameStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="real_name">Real Name</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="real_name" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['users']['0']['real_name']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="real_name"
+                                                    aria-describedby="real_nameStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="email">Email</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="email" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['users']['0']['email']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="email"
+                                                    aria-describedby="emailStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="default_password">Default Password</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="default_password" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['users']['0']['default_password']"
+                                                    ng-disabled="form.readonly" schema-validate="form"
+                                                    name="default_password" aria-describedby="default_passwordStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="checkbox schema-form-checkbox "
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                                <label class=""><input type="checkbox" sf-changed="form"
+                                                                       ng-disabled="form.readonly"
+                                                                       ng-model="model['target']['users']['0']['reset_password_on_login']"
+                                                                       ng-model-options="form.ngModelOptions"
+                                                                       schema-validate="form"
+                                                                       class="ng-empty ng-valid-schema-form"
+                                                                       name="reset_password_on_login"> <span
+                                                        ng-bind-html="form.title" class="ng-binding">Reset Password On Login</span></label>
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="checkbox schema-form-checkbox  has-success"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess()}">
+                                                <label class=""><input type="checkbox" sf-changed="form"
+                                                                       ng-disabled="form.readonly"
+                                                                       ng-model="model['target']['users']['0']['create_home']"
+                                                                       ng-model-options="form.ngModelOptions"
+                                                                       schema-validate="form"
+                                                                       class="ng-not-empty ng-valid-schema-form"
+                                                                       name="create_home"> <span
+                                                        ng-bind-html="form.title" class="ng-binding">Create Home</span></label>
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items -->
+                                        <sf-decorator ng-repeat="item in form.items" form="item" class="ng-scope">
+                                            <div class="form-group schema-form-text  has-feedback"
+                                                 ng-class="{'has-error': form.disableErrorState !== true &amp;&amp; hasError(), 'has-success': form.disableSuccessState !== true &amp;&amp; hasSuccess(), 'has-feedback': form.feedback !== false }">
+                                                <label class="control-label " ng-class="{'sr-only': !showTitle()}"
+                                                       for="groups">Groups</label>
+                                                <!-- ngIf: !form.fieldAddonLeft && !form.fieldAddonRight --><input
+                                                    ng-if="!form.fieldAddonLeft &amp;&amp; !form.fieldAddonRight"
+                                                    ng-show="form.key" type="text" step="any" sf-changed="form"
+                                                    placeholder="" class="form-control  ng-empty ng-valid-schema-form"
+                                                    id="groups" ng-model-options="form.ngModelOptions"
+                                                    ng-model="model['target']['users']['0']['groups']"
+                                                    ng-disabled="form.readonly" schema-validate="form" name="groups"
+                                                    aria-describedby="groupsStatus">
+                                                <!-- end ngIf: !form.fieldAddonLeft && !form.fieldAddonRight -->
+                                                <!-- ngIf: form.fieldAddonLeft || form.fieldAddonRight -->
+                                                <!-- ngIf: form.feedback !== false --><span
+                                                    ng-if="form.feedback !== false"
+                                                    class="form-control-feedback ng-scope glyphicon"
+                                                    ng-class="evalInScope(form.feedback) || {'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError() }"
+                                                    aria-hidden="true"></span><!-- end ngIf: form.feedback !== false -->
+                                                <!-- ngIf: hasError() || hasSuccess() -->
+                                                <div class="help-block" sf-message="form.description"></div>
+                                            </div>
+                                        </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+                                </sf-decorator>
+                            </li><!-- end ngRepeat: item in modelArray track by $index --></ol>
+                        <div class="clearfix" style="padding: 15px;">
+                            <button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()"
+                                    type="button" class="btn btn-default pull-right"><i
+                                    class="glyphicon glyphicon-plus"></i> Add
+                            </button>
+                        </div>
+                        <div class="help-block ng-binding ng-hide"
+                             ng-show="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"
+                             ng-bind-html="(hasError() &amp;&amp; errorMessage(schemaError())) || form.description"></div>
+                    </div>
+                </sf-decorator><!-- end ngRepeat: item in form.items --></fieldset>
+        </bootstrap-decorator>
+        <bootstrap-decorator form="schemaForm.form[8]" class="ng-scope">
+            <div class="form-group schema-form-submit "><!-- ngIf: form.type === 'submit' --><input type="submit"
+                                                                                                    class="btn btn-primary "
+                                                                                                    value="Save"
+                                                                                                    ng-disabled="form.readonly"
+                                                                                                    ng-if="form.type === 'submit'">
+                <!-- end ngIf: form.type === 'submit' --> <!-- ngIf: form.type !== 'submit' --></div>
+        </bootstrap-decorator>
+    </form>
+</div>
+
+<pre class="ng-binding"></pre>
+
+
+</body>
+</html>
