@@ -26,6 +26,13 @@ Options:
 
 """
 # todo: set a consistent way to version
+
+import sys
+import system_information as sysinf
+import itertools
+import routes
+import json
+
 __author__ = 'Matthew Marchese'
 __contributors__ = 'Brad Magyar'  # People who have helped go here
 __email__ = 'maffblaster@gentoo.org'
@@ -35,16 +42,10 @@ __source__ = 'https://github.com/gentoo/stager'
 __copyright__ = '2016-2017'
 __version__ = '0.1.0'  # Bump on version release
 
-from docopt import docopt
 
-import sys
-import system_information as sysinf
-import itertools
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
 
 # Instatiate object containing system info
-inf = sysinf.sysinf()
+inf = sysinf.sysinfo()
 archrepo = sysinf.repoSelect(inf.machine)
 repofile = sysinf.getFilename(archrepo['path'] + '/' + archrepo['textfile'])
 
@@ -55,12 +56,32 @@ digestsUrl = sysinf.getFileUrl(archrepo, repofile, 'digests')
 digestsAscUrl = sysinf.getFileUrl(archrepo, repofile, 'digests.asc')
 
 # Disk info
-partList = sysinf.getDisks()
-partDict = dict(itertools.zip_longest(*[iter(partList)] * 2, fillvalue=""))
+# Two-dimensional array. First index is object, second is array of json-serialized disk data for webpage display
+diskObject = sysinf.getDisks()
 
-partThing = sysinf.checkParts()
+partList = sysinf.getPartitions(0)
 
-print(partThing)
+#print(diskObject[1][2]['path'])
+'''
+for disk in diskObject[1]:
+    print("")
+#pprint(partThing[0])
+
+jsonDisks = {}
+
+# Creates array of attached disks
+
+
+for partition in partList:
+    #print(partition)
+    #print(part)
+    #print("Disk: " + str(partition.disk))
+    #print("Number: " + str(partition.number))
+    #print("Name: " + str(partition.name))
+    #print("Path: " + str(partition.path))
+    #print("FileSystem: " + str(partition.fileSystem.type) + "\n")
+    print('')
+'''
 
 # Default data to pass to form template
 gentooModel = {
@@ -72,7 +93,7 @@ gentooModel = {
         "interface": "*",
         "host": inf.hostname,
         "port": 61513,
-        "disks": partList
+        "disks": diskObject[1]
     },
     "target": {
         "host_arch": inf.machine,
@@ -86,42 +107,19 @@ gentooModel = {
     }
 }
 
+
+class dataclass(object):
+    pass
+
+data = dataclass()
+data.inf = inf
+data.gentooModel = gentooModel
+
+# Application routing
+routing = routes.routing.getroute(data)
+
 # Python 3 validator
 if sys.version_info <= (3, 0):
     print (__name__ + " requires Python 3.0 and up. Exiting...\n")
     sys.exit(1)
 
-# Instantiate Flask app
-app = Flask(__name__, static_url_path='/static')
-
-# Routing
-#   Root
-@app.route('/')
-def welcome():
-    return "Meet stager: the perfect Gentoo installer"
-
-#   Gentoo Form
-@app.route('/form')
-def formtest():
-    return render_template('formtemplate_vue.html', sysinf=inf, gentooModel=gentooModel)
-
-#    Auth
-@app.route('/auth', methods=['GET', 'POST'])
-def login():
-    print ('auth page')
-    error = None
-    if request.method == 'POST':
-        if request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid authorization key'
-        else:
-            session['logged_in'] = True
-            flash('Session has been authenticated!')
-            return redirect(url_for('show_entries'))
-    return render_template('login.html', error=error)
-
-if __name__ == '__main__':
-    arguments = docopt(__doc__, version=__version__)
-    print (arguments)
-
-# Run app
-app.run(debug=True)

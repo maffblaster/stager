@@ -5,10 +5,12 @@
     <title>Gentoo Stager</title>
     <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}" charset="utf-8"></script>
     <script src="{{ url_for('static', filename='js/vue.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='js/ajaxRequests.js') }}" charset="utf-8"></script>
     <!-- CAUSES BREAKS WITH # SIGNS IN HREF TAGS <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}" charset="utf-8"></script> -->
     <link href="{{ url_for('static', filename='bootstrap.css') }}" rel="stylesheet" media="screen">
     <link href="{{ url_for('static', filename='tyrian.css') }}" rel="stylesheet" media="screen">
 
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </head>
 <body>
 <header>
@@ -74,20 +76,6 @@
 
 <div id="gentooForm" class="container">
 
-    <table>
-        <th>Partition</th>
-        <th>FS Type</th>
-        <th>Mount Point</th>
-        <th>Options</th>
-        {% for item in gentooModel.sysinfo.disks %}
-            <tr>
-                <td>{{ item.device }}</td>
-                <td>{{ item.fstype }}</td>
-                <td>{{ item.mountpoint }}</td>
-                <td>{{ item.opts }}</td>
-            </tr>
-        {% endfor %}
-    </table>
     <form class="form-horizontal">
 
         <label for="autosave_config">Autosave Config</label>
@@ -138,7 +126,18 @@
                 <input v-model="target.repo_snapshot.gpgsig_uri" name="target[repo_snapshot][gpgsig_uri]" id="gpgsig_uri" type="text" placeholder="GPG Sig URI" class="form-control"/>
             </div>
         </fieldset>
+        <fieldset class="form-group">
+            <legend>Disks</legend>
+            <div class="col-md-4">
 
+                <select  class="form-control" id="disk_select">
+                    {% for disk in gentooModel.sysinfo.disks %}
+                        <option value="{{ disk.index }}">{{ disk.model }} - {{ disk.path }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-8" id="chartContainer" style="height: 200px; width: 100%;"></div>
+        </fieldset>
     </form>
 </div>
 
@@ -149,7 +148,5 @@
         el:"#gentooForm",
         data: gentooModel
     });
-
-    console.log(gentooModel.sysinfo.disks);
 </script>
 </body>

@@ -5,7 +5,8 @@ import urllib
 import psutil
 import parted
 
-class sysinf():
+
+class sysinfo():
     
     def __init__(self):
         # Python
@@ -50,6 +51,7 @@ def repoSelect(opt):
     }
     return switcher.get(opt, "")
 
+
 def getFilename(url):
     # Parses url of stage3 tarball from remote txt file
     try:
@@ -57,6 +59,7 @@ def getFilename(url):
         return doc[2].split()[0]
     except:
         pass
+
 
 def getFileUrl(uri, file, filetype):
     # Assembles url of tarball
@@ -72,13 +75,35 @@ def getFileUrl(uri, file, filetype):
         fileurl = ' '
     return fileurl
 
+
 def getDisks():
     try:
-        partlist = psutil.disk_partitions(False)
-        return partlist
+        # disklist = psutil.disk_partitions(False)
+        disk_array = []
+        disk_sub_array = []
+        disk_object = parted.getAllDevices()
+        disk_array.append(disk_object)
+        array_index = 0
+
+        for disk in disk_object:
+            disk_sub_array.append(
+                {"index": array_index, "model": disk.model, "path": disk.path, "sectorSize": disk.sectorSize, "length": disk.length,
+                 "readOnly": disk.readOnly, "externalMode": disk.externalMode, "busy": disk.busy})
+            array_index += 1
+
+        disk_array.append(disk_sub_array)
+
+        return disk_array
     except:
         pass
 
-def checkParts():
-    bah = parted.getDevice("/dev/sdb")
-    return bah
+
+def getPartitions(index):
+
+    disk_object = getDisks()
+
+    selected_disk = disk_object[0][index]
+
+    partitions = parted.Disk(selected_disk).partitions
+
+    return partitions
