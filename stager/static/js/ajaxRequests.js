@@ -1,5 +1,34 @@
 $(document).ready(function(){
 
+    function drawPartitions(partData, canvasWidth, diskWidth) {
+
+        var canvas = document.getElementById('partCanvas');
+
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+        };
+
+        var scaleFactor = (1000 * (canvasWidth / diskWidth));
+
+        console.log("scaleFactor: " + scaleFactor);
+
+        for (i = 0; i < partData.length; i++){
+
+            console.log(partData[i]);
+
+            var geom_start = partData[i].part_geom_start;
+            var geom_end = partData[i].part_geom_end;
+            var end = geom_end * scaleFactor;
+            var start = geom_start * scaleFactor;
+            var width = (end - start) * scaleFactor;
+
+            console.log("partWidth: " + width);
+
+            ctx.fillRect(start, 0, width, 80);
+
+        }
+    }
+
     function pullPartitions(diskIndex){
 
         $.ajax({
@@ -9,12 +38,11 @@ $(document).ready(function(){
             success: function(result){
 
                 var data = JSON.parse(result);
-                var partCount = data.length;
                 var canvasDataObject = [];
+                var fullDiskLength = data[0].disk_geom_length;
 
-                for (i = 0; i < partCount; i++) {
+                for (i = 0; i < data.length; i++) {
 
-                    var fullDiskLength = data[i].disk_geom_length;
                     var partLength = data[i].part_geom_length;
                     var partStart = data[i].part_geom_start;
                     var partEnd = data[i].part_geom_end;
@@ -22,8 +50,6 @@ $(document).ready(function(){
                     var sectorSize = data[i].sector_size
                     var readablePartLength = ((partLength * sectorSize) / 1000000000);
                     var readableDiskLength = ((fullDiskLength * sectorSize) / 1000000000);
-
-                    console.log(readableDiskLength);
 
                     canvasDataObject.push( {
                         type: "stackedBar",
@@ -33,8 +59,20 @@ $(document).ready(function(){
                     );
                 }
 
-                console.log(canvasDataObject);
 
+                var canvasWidth = $("#chartContainer").width();
+
+                $("#chartContainer").html('<canvas id="partCanvas" width="'+ canvasWidth +'" height="80" style="border:1px solid #000000;"></canvas>');
+
+                drawPartitions(data, canvasWidth, fullDiskLength);
+
+                console.log("canvasWidth: " + canvasWidth + " fullDiskLength: " + fullDiskLength);
+
+                $("#chartContainer").append(JSON.stringify(data));
+
+                //console.log(data);
+
+/*
                 var chart = new CanvasJS.Chart("chartContainer",
 
                     {
@@ -52,15 +90,20 @@ $(document).ready(function(){
                 );
 
                 chart.render();
+*/
+
             }
         })
     }
 
-    pullPartitions($('#disk_select').val());
 
+
+    pullPartitions($("#disk_select").val());
+
+
+    // Drop-down change
     $("#disk_select").change(function(){
-
-        pullPartitions($('#disk_select').val());
-
+        pullPartitions($("#disk_select").val());
     })
+
 })
